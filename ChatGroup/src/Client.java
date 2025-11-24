@@ -23,4 +23,46 @@ public class Client {
             Terminate(socket, bufferedReader, bufferedWriter);
         }
     }
+    
+    public void enviaMensagem() {
+        try {
+            // Recebendo nome do usuário que enviou a mensagem, para imprimir no client de quem receber a mensagem.
+            bufferedWriter.write(username);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+            // Criação de um scanner para enviar a mensagem aos outros clients.
+            Scanner scanner = new Scanner(System.in);
+            // O escaneamento continua enquanto houver conexão com o servidor
+            while (socket.isConnected()) {
+                String msgFila = scanner.nextLine();
+                bufferedWriter.write(username + ": " + msgFila);
+                bufferedWriter.newLine();
+                bufferedWriter.flush();
+            }
+        } catch (IOException e) {
+            Terminate(socket, bufferedReader, bufferedWriter);
+        }
+    }
+
+    public void recebeMensagem() {
+        // É necessária a criação de uma nova thread para o recebimento de mensagens
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String mensagemChat;
+                // O recebimento de mensagens continua enquanto houver conexão com o server
+                while (socket.isConnected()) {
+                    try {
+                        // Recebendo as mensagens e as imprimindo no console
+                        mensagemChat = bufferedReader.readLine();
+                        System.out.println(mensagemChat);
+                    } catch (IOException e) {
+                        Terminate(socket, bufferedReader, bufferedWriter);
+                    }
+                }
+            }
+        }).start();
+    }
 }
+
+
