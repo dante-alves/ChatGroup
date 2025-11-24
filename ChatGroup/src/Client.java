@@ -63,6 +63,39 @@ public class Client {
             }
         }).start();
     }
+    
+    // Método que fecha (terminate - extermina) tudo de maneira simples
+    public void Terminate(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+        try {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        // É requisitado um username para o usuário
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Digite seu Username para entrar no Chat: ");
+        String username = scanner.nextLine();
+        // O socket de conexão com o server é criado
+        Socket socket = new Socket("localhost", 1234);
+
+        // O socket e o username são repassados
+        Client client = new Client(socket, username);
+        // E aqui inicia-se o loop de enviar e receber mensagens do chat
+        client.recebeMensagem();
+        client.enviaMensagem();
+    }
 }
 
 
