@@ -25,4 +25,22 @@ public class Server {
             fechaServerSocket();
         }
     }
+
+    // Fechamento do socket do servidor
+    public void fechaServerSocket() {
+        try {
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            System.out.println("Server Fechado");
+        }
+    }
+
+    // É executado o programa
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket(1234);
+        Server server = new Server(serverSocket);
+        server.startServer();
+    }
 }
