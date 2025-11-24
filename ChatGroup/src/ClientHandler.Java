@@ -32,4 +32,38 @@ public class ClientHandler implements Runnable {
             Terminate(socket, bufferedReader, bufferedWriter);
         }
     }
+
+    // Nesse método, buscamos executá-lo em threads diferentes, para que o programa não fique
+    // travado, esperando por mensagens de outros usuários
+    @Override
+    public void run() {
+        String mensagemClient;
+        // Haverá recebimento de mensagens enquanto houver conexão com o client
+        while (socket.isConnected()) {
+            try {
+                // Fazendo a leitura do que um client enviou para que o mesmo seja enviado para os outros
+                mensagemClient = bufferedReader.readLine();
+                transmiteMensagem(mensagemClient);
+            } catch (IOException e) {
+                Terminate(socket, bufferedReader, bufferedWriter);
+                break;
+            }
+        }
+    }
+
+    // Método para enviar uma mensagem para todos os clientHandler, fazendo com que todo usuário receba a mensagem
+    public void transmiteMensagem(String msgFila) {
+        for (ClientHandler clientHandler : clientHandlers) {
+            try {
+                // Bloqueando a transmissão da mensagem (de login, por exemplo) para o usuário que a gerou
+                if (!clientHandler.clientUsername.equals(clientUsername)) {
+                    clientHandler.bufferedWriter.write(msgFila);
+                    clientHandler.bufferedWriter.newLine();
+                    clientHandler.bufferedWriter.flush();
+                }
+            } catch (IOException e) {
+                Terminate(socket, bufferedReader, bufferedWriter);
+            }
+        }
+    }
 }
