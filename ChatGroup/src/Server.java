@@ -8,4 +8,21 @@ public class Server {
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
+    
+    public void startServer() {
+        try {
+            // Espera conexões na porta 1234.
+            while (!serverSocket.isClosed()) {
+                Socket socket = serverSocket.accept();
+                System.out.println("Um novo usuario conectou-se!");
+                ClientHandler clientHandler = new ClientHandler(socket);
+                Thread thread = new Thread(clientHandler);
+                // Esse método inicia a execução de uma thread, e quando "start()" é chamado, o método run tambem é.
+                // Quem controlará as threads será o sistema operacional
+                thread.start();
+            }
+        } catch (IOException e) {
+            fechaServerSocket();
+        }
+    }
 }
