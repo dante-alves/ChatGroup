@@ -66,4 +66,29 @@ public class ClientHandler implements Runnable {
             }
         }
     }
+
+    // Método com a função de remover o Client caso o mesmo apresente erros ou desconexão
+    public void removeClientHandler() {
+        clientHandlers.remove(this);
+        transmiteMensagem("SERVER: " + clientUsername + " saiu do Chat!");
+    }
+
+    public void Terminate(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter) {
+
+        // Para que nenhuma outra mensagem seja transmitida por causa de erros ou corte de conexão, o Client é desconectado.
+        removeClientHandler();
+        try {
+            if (bufferedReader != null) {
+                bufferedReader.close();
+            }
+            if (bufferedWriter != null) {
+                bufferedWriter.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
