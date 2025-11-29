@@ -1,105 +1,101 @@
-# Chat Group em Java (Eclipse Project)
+# ChatGroup – Servidor de Chat + Servidor HTTP
 
-Este projeto é um **chat em tempo real** usando **Java Sockets** e **Threads**, permitindo que vários clientes conversem simultaneamente através de um servidor central.
+Este projeto é uma aplicação simples de **chat em Java usando sockets**, composta por:
 
-O projeto foi criado no **Eclipse**, e sua estrutura é:
+- **Server.java** – gerencia conexões e mensagens dos clientes  
+- **ClientHandler.java** – trata cada cliente conectado  
+- **Client.java** – conecta ao servidor e envia mensagens  
+- **Servidor HTTP (porta 8080)** – serve o arquivo `chat.html` contendo o histórico da conversa  
 
+
+---
+
+## Estrutura do Projeto
+
+```
 ChatGroup/
-└── src/
-└── (default package)
+│
+├── Server.java
 ├── Client.java
 ├── ClientHandler.java
-└── Server.java
+└── README.md
+```
 
-
----
-
-##  Requisitos
-
-- **Java JDK 8+**
-- **Eclipse IDE**
-- Permissão para usar a porta **1234**
+> O arquivo `chat.html` será gerado automaticamente na pasta raiz após o encerramento do chat.
 
 ---
 
-##  Importando o Projeto no Eclipse
+##  Como Executar o Projeto
 
-1. Abra o Eclipse  
-2. Vá em **File → Open Projects from File System...**
-3. Clique em **Directory...**
-4. Selecione a pasta raiz **ChatGroup/**
-5. Clique em **Finish**
+### 1. Compile os arquivos
 
----
+Na pasta do projeto:
 
-##  Executando o Servidor (Server.java)
+```bash
+javac *.java
+```
 
-1. No *Package Explorer*, abra:
-    ChatGroup → src → Server.java
-2. Clique com o botão direito no arquivo  
-3. Vá em **Run As → Java Application**
+Isso gera os `.class` dentro da raíz.
 
-O servidor começará a aguardar conexões na porta **1234**.
+### 2. Rode o servidor
 
----
+```bash
+java Server
+```
 
-##  Executando os Clientes (Client.java)
+### 3. Rode quantos clientes quiser
 
-Para cada cliente que quiser abrir:
+Em outros terminais dentro da pasta raíz:
 
-1. Abra:
-    ChatGroup → src → Client.java
-2. Clique com o botão direito  
-3. Selecione **Run As → Java Application**
-4. Digite um **username** quando solicitado
-
-Abra vários clientes para simular um chat real.
+```bash
+java Client
+```
 
 ---
 
-##  Testando a Comunicação
+## Como Encerrar o Chat e Gerar o HTML
 
-Com o servidor em execução:
+No console do **Server**, digite:
 
-- Abra vários Clients
-- Envie mensagens por cada um
+```
+sair
+```
 
-As mensagens aparecerão em todos os clientes conectados.
+O servidor fará:
 
-Exemplo:
-
-Cliente 1: João: Olá amigos!
-Cliente 2: Maria: Oi João!
-Cliente 3: Ana: Cheguei!
-
----
-
-##  Encerrando o Chat
-
-### Encerrar o servidor
-- Feche a aba Console no Eclipse  
-**ou** clique no botão vermelho **Terminate (⛔)**
-
-### Encerrar um cliente
-- Feche a execução do Client  
-- O servidor exibirá:
-    SERVER: <nome> saiu do Chat!
+1. Encerrar chat  
+2. Salvar `chat.html`  
+3. Iniciar automaticamente o servidor HTTP (porta 8080)
 
 ---
 
-##  Como funciona internamente
+## 🌐 Como Acessar o Histórico do Chat
 
-- O **Server** usa `ServerSocket` para aceitar novas conexões.
-- Para cada conexão é criado um **ClientHandler**, executado em uma nova **thread**.
-- O **ClientHandler**:
-- recebe as mensagens do cliente
-- retransmite para todos os outros
-- O **Client** usa:
-- uma thread para **receber**
-- a thread principal para **enviar**
+Depois que o servidor HTTP iniciar, abra:
 
-A comunicação é feita com:
-- `BufferedReader` (recebimento)
-- `BufferedWriter` (envio)
+```
+http://localhost:8080/chat.html
+```
+
+Você verá cada mensagem em um `<p>` separado.
+
+---
+
+## Teste Rápido
+
+1. Abra **Server**  
+2. Abra 2 instâncias de **Client**  
+3. Envie mensagens  
+4. No servidor, digite `sair`  
+5. Abra: http://localhost:8080/chat.html  
+6. Veja o histórico formatado
+
+---
+
+## Requisitos
+
+- Java 8+  
+- Porta **1234** livre para o chat  
+- Porta **8080** livre para o servidor HTTP  
 
 ---
