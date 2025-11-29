@@ -44,6 +44,8 @@ public class ClientHandler implements Runnable {
                 // Fazendo a leitura do que um client enviou para que o mesmo seja enviado para os outros
                 mensagemClient = bufferedReader.readLine();
                 transmiteMensagem(mensagemClient);
+
+                Server.addMessage(mensagemClient); // salvando no histórico de mensagens
             } catch (IOException e) {
                 Terminate(socket, bufferedReader, bufferedWriter);
                 break;
@@ -77,6 +79,9 @@ public class ClientHandler implements Runnable {
 
         // Para que nenhuma outra mensagem seja transmitida por causa de erros ou corte de conexão, o Client é desconectado.
         removeClientHandler();
+
+        Server.saveConversationAsHTML();
+
         try {
             if (bufferedReader != null) {
                 bufferedReader.close();
